@@ -1,0 +1,13 @@
+[package]
+name = "demo"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1.21.1", features = ["full"] }
+reliabletcp-common = {path = "../reliabletcp-common"}
+reliabletcp-client = {path = "../reliabletcp-client"}
+reliabletcp-server = {path = "../reliabletcp-server"}
+lazy_static = "1.4.0"
+md5 = "0.7.0"
+log = "0.4.17"

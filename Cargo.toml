@@ -1,0 +1,8 @@
+[workspace]
+
+members = [
+  "reliabletcp-common",
+  "reliabletcp-client",
+  "reliabletcp-server",
+  "demo"
+]

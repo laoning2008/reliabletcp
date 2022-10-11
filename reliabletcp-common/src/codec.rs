@@ -55,10 +55,10 @@ impl Decoder for Codec {
             }
 
             let (header_buf, _) = buf.split_array_ref::<HEADER_LEN>();
-            // if !crc8_rs::has_valid_crc8(*header_buf, POLYNOMIAL) {
-            //     buf.advance(size_of::<u8>());//skip flag
-            //     continue;
-            // }
+            if !crc8_rs::has_valid_crc8(*header_buf, POLYNOMIAL) {
+                buf.advance(size_of::<u8>());//skip flag
+                continue;
+            }
 
             let mut buf_header = BytesMut::from(header_buf.as_ref());
 
@@ -110,12 +110,12 @@ impl Encoder<Packet> for Codec
         buf_header.put_u32(packet.body.len() as u32);
         buf_header.put_u8(0);//hold the crc place
 
-        let (header, _) = buf_header.split_array_ref::<HEADER_LEN>();
-        crc8_rs::insert_crc8(*header, POLYNOMIAL);
+        let (mut header, _) = buf_header.split_array_ref::<HEADER_LEN>();
+        let header = crc8_rs::insert_crc8(*header, POLYNOMIAL);
 
 
         buf.reserve(size_of::<HeaderCodec>() + packet.body.len());
-        buf.put_slice(header);
+        buf.put_slice(&header);
         buf.put_slice(&packet.body);
 
         Ok(())

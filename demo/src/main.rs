@@ -40,14 +40,14 @@ fn main() {
         client.start().await;
 
         rt.spawn(async move {
-            tokio::signal::ctrl_c().await;
+            tokio::signal::ctrl_c().await.unwrap();
             println!("ctrl-c received!");
             server_ctrl_c.stop().await;
             client_ctrl_c.stop().await;
         });
 
         loop {
-            tokio::time::sleep(Duration::from_millis(2)).await;
+            tokio::time::sleep(Duration::from_millis(1000)).await;
             client_request.clone().request(1, false, vec![], SendOption::default()).await;
         }
     });
